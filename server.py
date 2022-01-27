@@ -43,7 +43,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             # 405 if not GET
             self.request.sendall(
                 bytearray("HTTP/1.1 405 Method Not Allowed", 'utf-8'))
-        elif '..' in request_route:
+        elif '/..' in request_route:
             self.request.sendall(
                 bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
         else:
