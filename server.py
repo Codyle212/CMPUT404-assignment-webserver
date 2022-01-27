@@ -31,6 +31,7 @@ import os
 class MyWebServer(socketserver.BaseRequestHandler):
 
     def handle(self):
+        baseurl = "http://127.0.0.1:8080"
         self.data = self.request.recv(1024).strip()
         print("Got a request of: %s\n" % self.data)
         decoded_data = self.data.decode('utf-8')
@@ -41,13 +42,30 @@ class MyWebServer(socketserver.BaseRequestHandler):
         request_route = request_array[1]
         if request_method != 'GET':
             # 405 if not GET
-            http_405 = f'HTTP/1.1 405 Method Not Allowed'
-            self.request.sendall(http_405.encode('utf-8'))
+            self.request.sendall(
+                bytearray("HTTP/1.1 405 Method Not Allowed", 'utf-8'))
         else:
             # 3 ways of handling 1.correct path,2correct path missing /,3 incorrect path
             path = os.path.join(os.getcwd()+"/www"+request_route)
             if os.path.isfile(path):
-                file_extension = os.path.splitext(file_path)[1]
+                if request_route.endswith('.html'):
+                    # server html
+                else:
+                    # server css
+            elif os.path.isdir(path):
+                # handling redirect if route doesn't end with '/'
+                if not path.endswith('/'):
+                    change_route = request_route + '/'
+                    self.request.sendall(
+                        bytearray("HTTP/1.1 301 Moved Permanently\r\nLocation: " + baseurl + change_route + "\r\n", 'utf-8'))
+                # serve html if user goes to the default route
+                default_route = request_route+'index.html'
+                path = os.path.join(os.getcwd()+"/www"+default_route)
+
+                # server html file
+            else:
+                self.request.sendall(
+                    bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
         path = os.path.join(os.getcwd()+"/www"+request_route)
 
         self.request.sendall(bytearray("OK", 'utf-8'))
