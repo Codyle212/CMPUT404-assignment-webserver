@@ -70,15 +70,18 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     change_route = request_route + '/'
                     self.request.sendall(
                         bytearray("HTTP/1.1 301 Moved Permanently\r\nLocation: " + baseurl + change_route + "\r\n", 'utf-8'))
-                # serve html if user goes to the default route
-                default_route = request_route+'index.html'
-                default_path = os.path.join(os.getcwd()+"/www"+default_route)
-                # server html file
-                file = open(default_path)
-                serving_file = file.read()
-                self.request.sendall(
-                    bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{serving_file}\r\n', 'utf-8'))
-                file.close()
+                else:
+                    # serve html if user goes to the default route
+                    default_route = request_route+'index.html'
+                    default_path = os.path.join(
+                        os.getcwd()+"/www"+default_route)
+                    # server html file
+                    file = open(default_path)
+                    serving_file = file.read()
+                    self.request.sendall(
+                        bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{serving_file}\r\n', 'utf-8'))
+                    file.close()
+
             else:
                 self.request.sendall(
                     bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
