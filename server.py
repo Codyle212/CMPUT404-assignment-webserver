@@ -76,6 +76,9 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 self.request.sendall(
                     bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{serving_file}\r\n', 'utf-8'))
                 file.close()
+            elif '..' in request_route:
+                self.request.sendall(
+                    bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
             else:
                 self.request.sendall(
                     bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
