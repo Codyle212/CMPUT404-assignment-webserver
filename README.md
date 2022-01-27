@@ -17,6 +17,7 @@ server.py contains contributions from:
 - Jackson Z Chang
 - Mandy Meindersma
 - Shi Ning Le
+
   But the server.py example is derived from the python documentation
   examples thus some of the code is Copyright © 2001-2022 Python
   Software Foundation; All Rights Reserved under the PSF license (GPL
