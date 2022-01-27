@@ -43,6 +43,9 @@ class MyWebServer(socketserver.BaseRequestHandler):
             # 405 if not GET
             self.request.sendall(
                 bytearray("HTTP/1.1 405 Method Not Allowed", 'utf-8'))
+        elif '..' in request_route:
+            self.request.sendall(
+                bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
         else:
             # 3 ways of handling 1.correct path,2correct path missing /,3 incorrect path
             path = os.path.join(os.getcwd()+"/www"+request_route)
@@ -76,9 +79,6 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 self.request.sendall(
                     bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{serving_file}\r\n', 'utf-8'))
                 file.close()
-            elif '..' in request_route:
-                self.request.sendall(
-                    bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
             else:
                 self.request.sendall(
                     bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
