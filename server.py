@@ -36,7 +36,6 @@ class MyWebServer(socketserver.BaseRequestHandler):
         print("Got a request of: %s\n" % self.data)
         decoded_data = self.data.decode('utf-8')
         request_array = decoded_data.split()
-        print(request_array)
         # only need method and path
         request_method = request_array[0]
         request_route = request_array[1]
@@ -48,16 +47,20 @@ class MyWebServer(socketserver.BaseRequestHandler):
             # 3 ways of handling 1.correct path,2correct path missing /,3 incorrect path
             path = os.path.join(os.getcwd()+"/www"+request_route)
             if os.path.isfile(path):
-                if request_route.endswith('.html'):
+                if request_route.endswith('html'):
                     # server html
-                    file = path.read()
+                    file = open(path)
+                    serving_file = file.read()
                     self.request.sendall(
-                        bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n{file}', 'utf-8'))
+                        bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{serving_file}', 'utf-8'))
+                    file.close()
                 else:
                     # server css
-                    file = path.read()
+                    file = open(path)
+                    serving_file = file.read()
                     self.request.sendall(
-                        bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/css\r\n{file}', 'utf-8'))
+                        bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/css\r\n\r\n{serving_file}', 'utf-8'))
+                    file.close()
             elif os.path.isdir(path):
                 # handling redirect if route doesn't end with '/'
                 if not path.endswith('/'):
@@ -68,15 +71,15 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 default_route = request_route+'index.html'
                 default_path = os.path.join(os.getcwd()+"/www"+default_route)
                 # server html file
-                file = default_path.read()
+                file = open(default_path)
+                serving_file = file.read()
                 self.request.sendall(
-                    bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/css\r\n{file}', 'utf-8'))
+                    bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{serving_file}\r\n', 'utf-8'))
+                file.close()
             else:
                 self.request.sendall(
                     bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
         # path = os.path.join(os.getcwd()+"/www"+request_route)
-
-        self.request.sendall(bytearray("OK", 'utf-8'))
 
 
 if __name__ == "__main__":
