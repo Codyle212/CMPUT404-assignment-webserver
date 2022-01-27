@@ -22,3 +22,8 @@ server.py contains contributions from:
   examples thus some of the code is Copyright © 2001-2022 Python
   Software Foundation; All Rights Reserved under the PSF license (GPL
   compatible) http://docs.python.org/2/library/socketserver.html
+
+  - Check For file extensions
+    https://stackoverflow.com/a/5899544/16793114
+  - Check for file validity
+    https://careerkarma.com/blog/python-check-if-file-exists/
