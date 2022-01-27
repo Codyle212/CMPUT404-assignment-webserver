@@ -50,8 +50,14 @@ class MyWebServer(socketserver.BaseRequestHandler):
             if os.path.isfile(path):
                 if request_route.endswith('.html'):
                     # server html
+                    file = path.read()
+                    self.request.sendall(
+                        bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n{file}', 'utf-8'))
                 else:
                     # server css
+                    file = path.read()
+                    self.request.sendall(
+                        bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/css\r\n{file}', 'utf-8'))
             elif os.path.isdir(path):
                 # handling redirect if route doesn't end with '/'
                 if not path.endswith('/'):
@@ -60,13 +66,15 @@ class MyWebServer(socketserver.BaseRequestHandler):
                         bytearray("HTTP/1.1 301 Moved Permanently\r\nLocation: " + baseurl + change_route + "\r\n", 'utf-8'))
                 # serve html if user goes to the default route
                 default_route = request_route+'index.html'
-                path = os.path.join(os.getcwd()+"/www"+default_route)
-
+                default_path = os.path.join(os.getcwd()+"/www"+default_route)
                 # server html file
+                file = default_path.read()
+                self.request.sendall(
+                    bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/css\r\n{file}', 'utf-8'))
             else:
                 self.request.sendall(
                     bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
-        path = os.path.join(os.getcwd()+"/www"+request_route)
+        # path = os.path.join(os.getcwd()+"/www"+request_route)
 
         self.request.sendall(bytearray("OK", 'utf-8'))
 
