@@ -1,6 +1,7 @@
 #  coding: utf-8
 import socketserver
-
+import mimetypes
+import os
 # Copyright 2013 Abram Hindle, Eddie Antonio Santos
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,6 +36,20 @@ class MyWebServer(socketserver.BaseRequestHandler):
         decoded_data = self.data.decode('utf-8')
         request_array = decoded_data.split()
         print(request_array)
+        # only need method and path
+        request_method = request_array[0]
+        request_route = request_array[1]
+        if request_method != 'GET':
+            # 405 if not GET
+            http_405 = f'HTTP/1.1 405 Method Not Allowed'
+            self.request.sendall(http_405.encode('utf-8'))
+        else:
+            # 3 ways of handling 1.correct path,2correct path missing /,3 incorrect path
+            path = os.path.join(os.getcwd()+"/www"+request_route)
+            if os.path.isfile(path):
+                file_extension = os.path.splitext(file_path)[1]
+        path = os.path.join(os.getcwd()+"/www"+request_route)
+
         self.request.sendall(bytearray("OK", 'utf-8'))
 
 
