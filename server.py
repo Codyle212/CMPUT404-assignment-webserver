@@ -33,6 +33,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
     def handle(self):
         baseurl = "http://127.0.0.1:8080"
         self.data = self.request.recv(1024).strip()
+
         print("Got a request of: %s\n" % self.data)
         decoded_data = self.data.decode('utf-8')
         request_array = decoded_data.split()
@@ -52,7 +53,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             # 3 ways of handling 1.correct path,2correct path missing /,3 incorrect path
             path = os.path.join(os.getcwd()+"/www"+request_route)
             if os.path.isfile(path):
-                if request_route.endswith('html'):
+                if request_route.endswith('.html'):
                     # server html
                     file = open(path)
                     serving_file = file.read()
