@@ -60,13 +60,16 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     self.request.sendall(
                         bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{serving_file}', 'utf-8'))
                     file.close()
-                else:
+                elif request_route.endswith('.css'):
                     # server css
                     file = open(path)
                     serving_file = file.read()
                     self.request.sendall(
                         bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/css\r\n\r\n{serving_file}', 'utf-8'))
                     file.close()
+                else:
+                    self.request.sendall(
+                        bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
             elif os.path.isdir(path):
                 # handling redirect if route doesn't end with '/'
                 if not path.endswith('/'):
@@ -84,7 +87,6 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     self.request.sendall(
                         bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{serving_file}\r\n', 'utf-8'))
                     file.close()
-
             else:
                 self.request.sendall(
                     bytearray("HTTP/1.1 404 Not Found\r\n", 'utf-8'))
