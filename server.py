@@ -57,15 +57,17 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     # server html
                     file = open(path)
                     serving_file = file.read()
+                    length = len(serving_file.encode('utf-8'))
                     self.request.sendall(
-                        bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{serving_file}', 'utf-8'))
+                        bytearray(f'HTTP/1.1 200 OK\r\nServer: Python3 TCP Server\r\nContent-Type: text/html\r\nContent-Length:{length}\r\nConnection:Close\r\n\r\n{serving_file}', 'utf-8'))
                     file.close()
                 elif request_route.endswith('.css'):
                     # server css
                     file = open(path)
                     serving_file = file.read()
+                    length = len(serving_file.encode('utf-8'))
                     self.request.sendall(
-                        bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/css\r\n\r\n{serving_file}', 'utf-8'))
+                        bytearray(f'HTTP/1.1 200 OK\r\nServer: Python3 TCP Server\r\nContent-Type: text/css\r\nContent-Length:{length}\r\nConnection:Close\r\n\r\n{serving_file}', 'utf-8'))
                     file.close()
                 else:
                     self.request.sendall(
@@ -84,8 +86,9 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     # server html file
                     file = open(default_path)
                     serving_file = file.read()
+                    length = len(serving_file.encode('utf-8'))
                     self.request.sendall(
-                        bytearray(f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{serving_file}\r\n', 'utf-8'))
+                        bytearray(f'HTTP/1.1 200 OK\r\nServer: Python3 TCP Server\r\nContent-Type: text/html\r\nContent-Length:{length}\r\nConnection:Close\r\n\r\n{serving_file}', 'utf-8'))
                     file.close()
             else:
                 self.request.sendall(
